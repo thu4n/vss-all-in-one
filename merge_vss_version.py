@@ -1,19 +1,24 @@
-import os
+from deepmerge import Merger
 import json
-from collections import defaultdict
+import os
+import argparse
 
-def merge_dicts(dict1, dict2):
-    merged_dict = defaultdict(list)
+parser = argparse.ArgumentParser(
+                    prog='VSS-Merger (beta)',
+                    description='A Python program to merge COVESA-VSS versions. Datatypes and other metadata will be taken from the first vss.json in the list')
 
-    for d in (dict1, dict2):
-        for key, value in d.items():
-            if isinstance(value, list):
-                # If it is a list, extend the list in merged_dict with the current list
-                merged_dict[key].extend(value)
-            else:
-                # If it is not a list, append the value to the list in merged_dict
-                merged_dict[key].append(value)
-    return dict(merged_dict)
+parser.add_argument('-s', '--slim', action='store_true', help='Output file will not contain uuid and comment.')
+parser.add_argument('-t', '--target-directory', type=str, default='./vss_releases', help="Target directory to read vss.json files from")
+
+my_merger = Merger(
+    [
+        (list, ["append_unique"]),
+        (dict, ["merge"]),
+        (set, ["union"])
+    ],
+    ["use_existing"],  # Fallback Strategies
+    ["use_existing"] # Type conflict Strategies
+)
 
 def merge_vss_files(vss_folder):
     merged_vss = {}
@@ -24,12 +29,30 @@ def merge_vss_files(vss_folder):
         print(vss_file)
         with open(file_path, 'r') as f:
             vss_data = json.load(f)
-            merged_vss = merge_dicts(merged_vss, vss_data)
+            merged_vss = my_merger.merge(merged_vss, vss_data)
         
     return merged_vss
 
-vss_folder = "vss_releases/"
-merged_vss = merge_vss_files(vss_folder=vss_folder)
+def filter_dict(data):
+    result = {}
+    for key, value in data.items():
+        if isinstance(value, dict):
+            result[key] = filter_dict(value)
+        elif key != "uuid" and key != "comment":
+            result[key] = value
+    return result
 
-with open('test3.json', 'w') as f:
-    json.dump(merged_vss, f, indent=2)
+if __name__ == '__main__':
+    args = parser.parse_args()
+    vss_folder = args.target_directory
+    slim_mode = args.slim
+    merged_vss = merge_vss_files(vss_folder=vss_folder)
+
+    if slim_mode:
+        suffix = "_slim"
+        merged_vss_slim = filter_dict(merged_vss)
+        with open(f'merged_vss{suffix}.json', 'w') as f:
+            json.dump(merged_vss_slim, f, indent=2)
+
+    with open(f'merged_vss.json', 'w') as f:
+        json.dump(merged_vss, f, indent=2)
