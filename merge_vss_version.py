@@ -2,6 +2,8 @@ from deepmerge import Merger
 import json
 import os
 import argparse
+import logging
+from copy import deepcopy
 
 parser = argparse.ArgumentParser(
                     prog='VSS-Merger (beta)',
@@ -10,10 +12,28 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-s', '--slim', action='store_true', help='Output file will not contain uuid and comment.')
 parser.add_argument('-t', '--target-directory', type=str, default='./vss_releases', help="Target directory to read vss.json files from")
 
-my_merger = Merger(
+def vss_dict_strategy_merge(config, path: list, base: dict, nxt: dict) -> dict:
+    """
+    if 2 VSS instance have different datatype, we will keep the base version (5.0)
+    else, we proceed with the standard dict merge stategy
+    """
+    original_base = deepcopy(base)
+
+    for key, value in nxt.items():
+        if key == 'datatype' and base[key] != nxt[key]:
+            logger.debug(f"Different datatype {base[key]}: {nxt[key]}, proceed to keep base version 5.0")
+            return original_base
+        elif key not in base:
+            base[key] = value
+            logger.info(f'New key {key} added')
+        else:
+            base[key] = config.value_strategy(path + [key], base[key], value)
+    return base
+
+vss_merger = Merger(
     [
         (list, ["append_unique"]),
-        (dict, ["merge"]),
+        (dict, [vss_dict_strategy_merge]),
         (set, ["union"])
     ],
     ["use_existing"],  # Fallback Strategies
@@ -29,7 +49,7 @@ def merge_vss_files(vss_folder):
         print(vss_file)
         with open(file_path, 'r') as f:
             vss_data = json.load(f)
-            merged_vss = my_merger.merge(merged_vss, vss_data)
+            merged_vss = vss_merger.merge(merged_vss, vss_data)
         
     return merged_vss
 
@@ -43,6 +63,9 @@ def filter_dict(data):
     return result
 
 if __name__ == '__main__':
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(filename='logs/vss_merge_version.log', encoding='utf-8', level=logging.DEBUG)
+
     args = parser.parse_args()
     vss_folder = args.target_directory
     slim_mode = args.slim

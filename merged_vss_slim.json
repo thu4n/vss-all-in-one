@@ -2023,8 +2023,7 @@
             ],
             "datatype": "string",
             "description": "The position of the driver seat in row 1.",
-            "type": "attribute",
-            "default": 1
+            "type": "attribute"
           },
           "HVAC": {
             "children": {

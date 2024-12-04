@@ -9,9 +9,9 @@
 # https://github.com/COVESA/vehicle_signal_specification/releases/download/v4.2/vss_rel_4.2.json
 
 REPO="COVESA/vehicle_signal_specification"
-ASSET_PATTERN="*yaml"
+ASSET_PATTERN="*json"
 VERSIONS=$(gh release list --repo COVESA/vehicle_signal_specification |  awk '{print $1}')
-TARGET_DIR=$"vss_releases_qu"
+TARGET_DIR=$"vss_releases"
 
 mkdir -p $TARGET_DIR
 
@@ -24,9 +24,7 @@ do
         echo "Skipping Release Candidate version"
         continue
     fi
-    gh release download $VERSION --repo $REPO --pattern $ASSET_PATTERN --dir $TARGET_DIR
-    mv $TARGET_DIR/units.yaml $TARGET_DIR/$VERSION-units.yaml 
-    mv $TARGET_DIR/quantities.yaml $TARGET_DIR/$VERSION-quantities.yaml 
+    gh release download $VERSION --repo $REPO --pattern "$ASSET_PATTERN" --dir $TARGET_DIR
 done
 
 echo "Cleaning up..."

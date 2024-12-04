@@ -2374,8 +2374,7 @@
             "datatype": "string",
             "description": "The position of the driver seat in row 1.",
             "type": "attribute",
-            "uuid": "bca9ccd50358584d8d20865694b0d15f",
-            "default": 1
+            "uuid": "bca9ccd50358584d8d20865694b0d15f"
           },
           "HVAC": {
             "children": {
@@ -2454,8 +2453,7 @@
                             "datatype": "float",
                             "description": "Temperature",
                             "type": "actuator",
-                            "unit": "celsius",
-                            "uuid": "1eae45dbda85581ca794b6b4513376cd"
+                            "unit": "celsius"
                           }
                         },
                         "description": "HVAC for single station in the vehicle",
@@ -2488,8 +2486,7 @@
                             "datatype": "float",
                             "description": "Temperature",
                             "type": "actuator",
-                            "unit": "celsius",
-                            "uuid": "3a7a6b5f8c4756d4bcf540ee41c781e1"
+                            "unit": "celsius"
                           }
                         },
                         "description": "HVAC for single station in the vehicle",
@@ -2597,8 +2594,7 @@
                             "datatype": "float",
                             "description": "Temperature",
                             "type": "actuator",
-                            "unit": "celsius",
-                            "uuid": "50d268809c555b82b275884f8c170825"
+                            "unit": "celsius"
                           }
                         },
                         "description": "HVAC for single station in the vehicle",
@@ -2631,8 +2627,7 @@
                             "datatype": "float",
                             "description": "Temperature",
                             "type": "actuator",
-                            "unit": "celsius",
-                            "uuid": "a83b6548c3c95d288072caa1a7dc2904"
+                            "unit": "celsius"
                           }
                         },
                         "description": "HVAC for single station in the vehicle",
@@ -2740,8 +2735,7 @@
                             "datatype": "float",
                             "description": "Temperature",
                             "type": "actuator",
-                            "unit": "celsius",
-                            "uuid": "d16ac539f8035e209831c1f4c7c39c83"
+                            "unit": "celsius"
                           }
                         },
                         "description": "HVAC for single station in the vehicle",
@@ -2774,8 +2768,7 @@
                             "datatype": "float",
                             "description": "Temperature",
                             "type": "actuator",
-                            "unit": "celsius",
-                            "uuid": "1499ad96881c551886081c52d404d3e3"
+                            "unit": "celsius"
                           }
                         },
                         "description": "HVAC for single station in the vehicle",
@@ -2883,8 +2876,7 @@
                             "datatype": "float",
                             "description": "Temperature",
                             "type": "actuator",
-                            "unit": "celsius",
-                            "uuid": "9db31f66a7575255864758d62a4e0185"
+                            "unit": "celsius"
                           }
                         },
                         "description": "HVAC for single station in the vehicle",
@@ -2917,8 +2909,7 @@
                             "datatype": "float",
                             "description": "Temperature",
                             "type": "actuator",
-                            "unit": "celsius",
-                            "uuid": "06b974ba5325558793b8a7dccb560bde"
+                            "unit": "celsius"
                           }
                         },
                         "description": "HVAC for single station in the vehicle",
@@ -12115,8 +12106,7 @@
                 "deprecation": "v5.0 moved to EngineCoolant.Temperature",
                 "description": "Engine coolant temperature.",
                 "type": "sensor",
-                "unit": "celsius",
-                "uuid": "fff3cad23cac5b189a1a075c3ab562cd"
+                "unit": "celsius"
               },
               "EOP": {
                 "datatype": "uint16",
@@ -12130,8 +12120,7 @@
                 "deprecation": "v5.0 moved to EngineOil.Temperature",
                 "description": "Engine oil temperature.",
                 "type": "sensor",
-                "unit": "celsius",
-                "uuid": "eae6f5eae04f530e80f6b024f95b767d"
+                "unit": "celsius"
               },
               "EngineCode": {
                 "comment": "For hybrid vehicles the engine code may refer to the combination of combustion and electric engine.",
@@ -12358,8 +12347,7 @@
                 "datatype": "int16",
                 "description": "Current engine torque. Shall be reported as a negative number during engine breaking.",
                 "type": "sensor",
-                "unit": "Nm",
-                "uuid": "b81f504bdb57513299ae6e9402ec7bcd"
+                "unit": "Nm"
               }
             },
             "description": "Engine-specific data, stopping at the bell housing.",
@@ -12373,8 +12361,7 @@
                 "deprecation": "v5.0 moved to EngineCoolant.Temperature",
                 "description": "Motor coolant temperature (if applicable).",
                 "type": "sensor",
-                "unit": "celsius",
-                "uuid": "3c5ea8c7700956518f2ae7a2a0f34f1c"
+                "unit": "celsius"
               },
               "EngineCode": {
                 "datatype": "string",
@@ -12472,8 +12459,7 @@
                 "datatype": "float",
                 "description": "Motor temperature.",
                 "type": "sensor",
-                "unit": "celsius",
-                "uuid": "1b7c15e5341052139995bfacea2c05b2"
+                "unit": "celsius"
               },
               "TimeInUse": {
                 "comment": "Vehicles may define their READY state.",
@@ -13837,8 +13823,7 @@
                 "datatype": "float",
                 "description": "The current gearbox temperature.",
                 "type": "sensor",
-                "unit": "celsius",
-                "uuid": "4f5e48c3511b5e1abff11aa7ec62dd18"
+                "unit": "celsius"
               },
               "TorqueDistribution": {
                 "datatype": "float",
