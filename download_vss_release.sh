@@ -3,7 +3,7 @@
 # Make sure you have the GitHub CLI installed (https://cli.github.com/) and logged in with `gh auth login` before running this script.
 
 # For some reasons, v5.0 release json file name is just 'vss.json' so if this remains a thing in future releases,
-# this script won't work due to same overwriting files with the same name.
+# this script won't work due to files with the same name getting overwritten.
 
 # https://github.com/COVESA/vehicle_signal_specification/releases/download/v5.0/vss.json
 # https://github.com/COVESA/vehicle_signal_specification/releases/download/v4.2/vss_rel_4.2.json
@@ -12,40 +12,47 @@ REPO="COVESA/vehicle_signal_specification"
 ASSET_PATTERN="*json"
 VERSIONS=$(gh release list --repo COVESA/vehicle_signal_specification |  awk '{print $1}')
 TARGET_DIR=$"vss_releases"
+OLD_VERSIONS=("1.0" "2.0" "2.1" "2.2")
 
 mkdir -p $TARGET_DIR
 
-echo "Downloading COVESA-VSS JSON releases"
+echo "1. Downloading COVESA-VSS JSON releases"
 
 for VERSION in $VERSIONS;
 do
-    echo $VERSION
     if [[ $VERSION == *rc0* ]]; then
-        echo "Skipping Release Candidate version"
+        echo "-- Skipping Release Candidate version $VERSION"
         continue
     fi
+
+    for OLD_VERSION in "${OLD_VERSIONS[@]}"; do
+        if [[ $VERSION == *$OLD_VERSION* ]]; then
+            echo "-- Skipping old VSS version $OLD_VERSION"
+            OLD_VERSIONS=( "${OLD_VERSIONS[@]/$OLD_VERSION}" )
+            continue 2
+        fi
+    done
+
+    echo "-- Downloading VSS Version $VERSION"
     gh release download $VERSION --repo $REPO --pattern "$ASSET_PATTERN" --dir $TARGET_DIR
 done
 
-echo "Cleaning up..."
+mv $TARGET_DIR/vss.json $TARGET_DIR/vss_rel_5.0.json
 
-OLD_VERSIONS=("1.0" "2.0" "2.1" "2.2")
+# We only need the latest version of units.yaml for the vehicle model generator to work.
+echo "2. Downloading VSS 5.0 units.yaml ..."
+gh release download v5.0 --repo $REPO --pattern "units.yaml" --dir .
+mv units.yaml units_v5.0.yaml
+
+echo "3. Cleaning up..."
 
 for file in $TARGET_DIR/*; 
 do
     filename="$(basename "$file")"
-
     if [[ $filename == *noexpand* ]]; then
-        echo "Removing unused $(basename "$file")"
+        echo "-- Removing unused $(basename "$file")"
         rm $file
-       
     fi
-
-    for version in "${OLD_VERSIONS[@]}"; do
-        if [[ $filename == *$version* ]]; then
-            echo "Removing old VSS version $version: $filename"
-            rm $file
-            continue 2
-        fi
-    done
 done
+
+echo "All tasks done."
